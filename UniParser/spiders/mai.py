@@ -33,6 +33,21 @@ class MaiSpider(scrapy.Spider):
 
     def parse_table(self, response):
 
+        filial = response.url[48]
+        if filial == '1':
+            filial = 'МАИ'
+        elif filial == '2':
+            filial = 'Филиал "Восход" МАИ'
+        elif filial == '3':
+            filial = 'Филиал "Стрела МАИ"'
+        elif filial == '4':
+            filial = 'Ступинский филиал МАИ'
+        elif filial == '5':
+            filial = 'Филиал "Взлет МАИ"'
+        else:
+            filial = 'Error'
+
+
         course_fancy = response.css('p b::text')[0].get()
         course_code = course_fancy[:8]
         course_fancy = course_fancy[8:].strip()
@@ -46,6 +61,7 @@ class MaiSpider(scrapy.Spider):
                         exam = person.css('td::text')[3].getall()[0]
 
                         yield {
+                            'filial': filial,
                             'course_code': course_code,
                             'course_name': course_fancy,
                             'name': name,
